@@ -888,7 +888,7 @@ class LoggingHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_header("Location", REDIRECTS[path_only])
                 self.send_header("Content-Length", "0")
                 self.end_headers()
-            elif path_only == "/ssrf-redirect":
+            elif path_only == "/redirect":
                 from urllib.parse import parse_qs, unquote
                 query_string = self.path.split("?", 1)[1] if "?" in self.path else ""
                 target = parse_qs(query_string).get("to", [""])[0]
