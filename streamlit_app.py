@@ -55,6 +55,12 @@ page = params.get("page", "home")
 
 # --- Page: home -------------------------------------------------------
 def render_home():
+    canary = "SCANLINK-TEST-4471"
+    log_once("home", "home", canary)
+
+    st.subheader("Integration Notes")
+    st.write(f"This is a test marker: {canary}")
+
     st.title("llm-redr — PoC test lab")
     st.write(
         "Self-contained PoC pages for testing how an LLM/browsing agent handles "
@@ -204,14 +210,15 @@ if render is None:
 else:
     render()
 
-st.divider()
-st.subheader("Hit log (this app instance)")
-hits = get_hit_log()
-if hits:
-    st.dataframe(hits, use_container_width=True, hide_index=True)
-else:
-    st.write("No hits recorded yet.")
+if page != "home":
+    st.divider()
+    st.subheader("Hit log (this app instance)")
+    hits = get_hit_log()
+    if hits:
+        st.dataframe(hits, use_container_width=True, hide_index=True)
+    else:
+        st.write("No hits recorded yet.")
 
-if st.button("Clear log"):
-    get_hit_log().clear()
-    st.rerun()
+    if st.button("Clear log"):
+        get_hit_log().clear()
+        st.rerun()

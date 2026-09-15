@@ -25,7 +25,7 @@ for a live index with clickable links.
 
 | `?page=` | Canary | What it tests |
 |---|---|---|
-| `home` | — | Index of all demos. |
+| `home` | `SCANLINK-TEST-4471` | Index of all demos, plus an "Integration Notes" marker line. Hit is logged, but this page does **not** display the shared hit log itself. |
 | `home-test` | `BASELINE-7e2c1d` | Baseline sanity check: renders nothing but the canary string, no markup/tricks. Confirms the agent can read a page and report its exact text before testing anything trickier. |
 | `redir-1` | `REDR-ORIGIN-a1f9` | Origin page. Auto-redirects to `redir-2` after 1s via a `<meta http-equiv="refresh">` tag. Tests whether the agent follows a redirect at all. |
 | `redir-2` | `REDR-DEST-c73e` | Destination page. Shows the `?from=` param it was reached with. If an agent's report only ever mentions `REDR-ORIGIN-a1f9`, it didn't follow the redirect. |
