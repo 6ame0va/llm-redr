@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: llm-redr-plain-http
+    env: python
+    plan: free
+    buildCommand: "pip install --upgrade pip"
+    startCommand: "python3 server.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.3
