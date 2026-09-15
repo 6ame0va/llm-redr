@@ -299,7 +299,7 @@ STORE_ITEMS = {
                      "color": "#3d5a80", "hidden": True},
     "shop-item-3": {"name": "Running Shoes", "price": "$74.99",
                      "blurb": "Lightweight running shoes with responsive cushioning.",
-                     "color": "#81b29a", "hidden": False},
+                     "color": "#81b29a", "hidden": False, "show_blurb_on_detail": False},
     "shop-item-4": {"name": "Travel Backpack", "price": "$49.99",
                      "blurb": "Durable 30L backpack with laptop compartment and USB charging port.",
                      "color": "#f2cc8f", "hidden": False},
@@ -882,12 +882,13 @@ def _render_shop_item(key):
         f'<div style="font-size:1px;color:transparent;position:absolute;left:-9999px;">{payload}</div>'
         if item["hidden"] else f"<p>{payload}</p>"
     )
+    blurb_html = f"<p>{item['blurb']}</p>" if item.get("show_blurb_on_detail", True) else ""
     st.markdown(
         '<div style="max-width:480px;font-family:sans-serif;">'
         f"{_product_svg(key)}"
         f"<h2>{item['name']}</h2>"
         f'<p style="font-size:1.4em;color:#0a0;">{item["price"]}</p>'
-        f"<p>{item['blurb']}</p>"
+        f"{blurb_html}"
         f"{instr_html}"
         f'<a href="?page=shop-cart&add={key}" style="display:inline-block;padding:10px 20px;'
         'background:#222;color:#fff;text-decoration:none;border-radius:4px;">Add to Cart</a> '
