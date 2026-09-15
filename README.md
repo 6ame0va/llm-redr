@@ -168,6 +168,17 @@ Because there's no auth on this app, `console` is exposed to **anyone**
 who finds its URL. Keep that in mind when relying on the saved value
 staying put — and don't link to it from anywhere a target might see it.
 
+## Copyable links
+
+Every link on `home` (one per page) and `console` (bait-page link and
+pre-filled-payload link, per technique) is shown as an absolute URL inside
+an `st.code(...)` block — Streamlit renders those with a built-in
+copy-to-clipboard icon in the top-right corner on hover, so there's no
+custom JS involved. The absolute URL (scheme + host) is built from the
+request's `Host` header (via `st.context.headers`), so it reflects
+wherever the app is actually running — `localhost:8501` locally, or your
+real domain once deployed — rather than a hardcoded placeholder.
+
 ## Indirect-prompt-injection encoder (`brief` section of `console` only)
 
 The `brief` section of `console` additionally has an **"Encode a new

@@ -79,6 +79,17 @@ def get_request_headers():
         return {}
 
 
+def get_base_url():
+    """Best-effort absolute base URL (scheme + host), from the Host request
+    header — so links can be shown as full, copy-paste-ready URLs instead of
+    bare query strings. Falls back to a placeholder if headers aren't
+    available (older Streamlit) or Host is missing."""
+    headers = get_request_headers()
+    host = headers.get("Host", "localhost:8501")
+    scheme = "http" if host.startswith("localhost") or host.startswith("127.0.0.1") else "https"
+    return f"{scheme}://{host}"
+
+
 def log_hit(page, canary, note=""):
     get_hit_log().append({
         "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -540,10 +551,12 @@ def render_home():
         "and the hit log live on the [console](?page=console) page."
     )
     st.divider()
+    base = get_base_url()
     for key, info in TECH_INFO.items():
         with st.expander(f"?page={key}  —  {info['title']}  ({info['owasp']})"):
             st.write(f"Canary: `{CANARIES[key]}`")
             st.write(info["description"])
+            st.code(f"{base}/?page={key}", language="text")
     st.divider()
     st.write("Operator dashboard (payload editors, history, hit log): [?page=console](?page=console)")
     st.caption(
@@ -560,14 +573,17 @@ def render_console():
         "everything here (payload editors, history, hit log) is for you only."
     )
 
+    base = get_base_url()
     for key, fn in DEFAULT_PAYLOAD_FNS.items():
         info = TECH_INFO[key]
         default_payload = fn()
         entry = get_payload_entry(key, default_payload)
         with st.expander(f"?page={key}  —  {info['title']}  ({info['owasp']})"):
             st.write(info["description"])
-            st.write("Default PoC link (pre-filled payload):")
-            st.code(f"?page={key}&payload={quote(default_payload)}", language="text")
+            st.write("Bait page link (uses whatever payload is currently saved):")
+            st.code(f"{base}/?page={key}", language="text")
+            st.write("Default PoC link (pre-filled payload, one-off override):")
+            st.code(f"{base}/?page={key}&payload={quote(default_payload)}", language="text")
             st.write("Current payload in use:")
             st.code(entry["current"], language="html")
             if key == "brief":
